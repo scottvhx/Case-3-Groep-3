@@ -1,22 +1,22 @@
 import pandas as pd
 import numpy as np
 
-airport= pd.read_csv('airports-extended-clean.csv', sep = ';')
-flight1= pd.read_excel('1Flight 1.xlsx')
-flight2= pd.read_excel('1Flight 2.xlsx')
-flight3= pd.read_excel('1Flight 3.xlsx')
-flight4= pd.read_excel('1Flight 4.xlsx')
-flight5= pd.read_excel('1Flight 5.xlsx')
-flight6= pd.read_excel('1Flight 6.xlsx')
-flight7= pd.read_excel('1Flight 7.xlsx')
-flight31= pd.read_excel('30Flight 1.xlsx')
-flight32= pd.read_excel('30Flight 2.xlsx')
-flight33= pd.read_excel('30Flight 3.xlsx')
-flight34= pd.read_excel('30Flight 4.xlsx')
-flight35= pd.read_excel('30Flight 5.xlsx')
-flight36= pd.read_excel('30Flight 6.xlsx')
-flight37= pd.read_excel('30Flight 7.xlsx')
-schedule= pd.read_csv('schedule_airport.csv')
+airport= pd.read_csv('data/airports-extended-clean.csv', sep = ';', decimal=',')
+flight1= pd.read_excel('data/1Flight 1.xlsx')
+flight2= pd.read_excel('data/1Flight 2.xlsx')
+flight3= pd.read_excel('data/1Flight 3.xlsx')
+flight4= pd.read_excel('data/1Flight 4.xlsx')
+flight5= pd.read_excel('data/1Flight 5.xlsx')
+flight6= pd.read_excel('data/1Flight 6.xlsx')
+flight7= pd.read_excel('data/1Flight 7.xlsx')
+flight31= pd.read_excel('data/30Flight 1.xlsx')
+flight32= pd.read_excel('data/30Flight 2.xlsx')
+flight33= pd.read_excel('data/30Flight 3.xlsx')
+flight34= pd.read_excel('data/30Flight 4.xlsx')
+flight35= pd.read_excel('data/30Flight 5.xlsx')
+flight36= pd.read_excel('data/30Flight 6.xlsx')
+flight37= pd.read_excel('data/30Flight 7.xlsx')
+schedule= pd.read_csv('data/schedule_airport.csv')
 
 # Controleren als NaN of - in de dataframe zit en anders veranderen naar de de nul
 schedule[["DL1", "IX1", "DL2", "IX2"]] = schedule[["DL1", "IX1", "DL2", "IX2"]].replace("-", "0")
@@ -49,6 +49,3 @@ flight34clean= flight34.drop_duplicates()
 flight35clean= flight35.drop_duplicates()
 flight36clean= flight36.drop_duplicates()
 flight37clean= flight37.drop_duplicates()
-
-
-
