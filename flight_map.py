@@ -2,18 +2,18 @@ import folium
 import math
 import numpy as np
 import data_cleaning
-from vinc import v_direct
 import pyproj
 
-airport_df = data_cleaning.airportclean[['IATA', 'Longitude', 'Latitude']]
+# Subesetting ICAO, LON, LAT from dataframe
+airport_df = data_cleaning.airportclean[['ICAO', 'Longitude', 'Latitude']]
 
-def draw_flight_path(start_IATA, end_IATA):
+def draw_flight_path(start_ICAO, end_ICAO):
 
     # Retrieve Lat and Long from dataframe
-    startLong = airport_df.loc[airport_df['IATA'] == start_IATA, 'Latitude'].iloc[0]
-    startLat = airport_df.loc[airport_df['IATA'] == start_IATA, 'Longitude'].iloc[0]
-    endLong = airport_df.loc[airport_df['IATA'] == end_IATA, 'Latitude'].iloc[0]
-    endLat = airport_df.loc[airport_df['IATA'] == end_IATA, 'Longitude'].iloc[0]
+    startLong = airport_df.loc[airport_df['ICAO'] == start_ICAO, 'Latitude'].iloc[0]
+    startLat = airport_df.loc[airport_df['ICAO'] == start_ICAO, 'Longitude'].iloc[0]
+    endLong = airport_df.loc[airport_df['ICAO'] == end_ICAO, 'Latitude'].iloc[0]
+    endLat = airport_df.loc[airport_df['ICAO'] == end_ICAO, 'Longitude'].iloc[0]
 
     # Calculate distance between points
     g = pyproj.Geod(ellps='WGS84')
@@ -26,14 +26,16 @@ def draw_flight_path(start_IATA, end_IATA):
     folium.PolyLine(
         locations=lonlats,
         color='red',
-        tooltip=start_IATA + '->' + end_IATA,
+        tooltip=start_ICAO + '->' + end_ICAO,
         weight=2
     ).add_to(m)
 
+# Draw Folium Map
 m = folium.Map(location=(0,0), tiles="cartodb positron", zoom_start=1.5)
 
-draw_flight_path('DXB', 'JFK')
+#draw_flight_path()
 
+# Save map temporarily
 m.save('map_test.html')
 
 
