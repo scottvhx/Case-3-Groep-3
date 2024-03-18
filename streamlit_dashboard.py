@@ -4,13 +4,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import data_cleaning
 
-#data
-
-
-
-# In[ ]:
-
-
 # Dit is het hoofd van de site
 st.title(':blue[Vertraagde vluchten :airplane:]')
 
@@ -95,13 +88,13 @@ with tab3:
 with tab4:
     st.write("Conclusie")
     expander = st.expander("Filter items")
-red = expander.checkbox("Show red items.", True)
-blue = expander.checkbox("Show blue items.", True)
+    red = expander.checkbox("Show red items.", True)
+    blue = expander.checkbox("Show blue items.", True)
 
-if red:
-    st.write(":red[This is a red item.]")
-if blue:
-    st.write(":blue[This is a blue item.]")
+    if red:
+        st.write(":red[This is a red item.]")
+    if blue:
+        st.write(":blue[This is a blue item.]")
     
 
     
