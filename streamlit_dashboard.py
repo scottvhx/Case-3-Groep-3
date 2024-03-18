@@ -14,7 +14,7 @@ st.title(':blue[Vertraagde vluchten :airplane:]')
 
 # tabs die worden verwezen naar de onderstaande arguments
 
-tab1, tab2, tab3, tab4, = st.tabs([":blue[Data]", ":blue[Vertraagde vluchten]", ":blue[Voorspellingen]", ":red[Conclusie]"])
+tab1, tab2, tab3, tab4, tab5= st.tabs([":blue[Data]", ":blue[Vertraagde vluchten]", ":blue[Voorspellingen]", ":red[Conclusie]", "blue[Bar-plot]"])
 
 # Voeg inhoud toe aan elke tab
 with tab1:
@@ -33,7 +33,7 @@ with tab1:
     
 with tab2:
     st.title("Flight Mapper")
-    folium_static(flight_map.m, width=650, height=450)
+    folium_static(flight_map.m, width=650, height=650)
 
     st.header("Mogelijke vertraagde vluchten") 
     st.subheader('*Verken de wereld met onze interactieve kaart:*') 
@@ -100,10 +100,5 @@ with tab4:
         st.write(":red[This is a red item.]")
     if blue:
         st.write(":blue[This is a blue item.]")
-    
 
-    
-
-
-
-
+with tab5:
