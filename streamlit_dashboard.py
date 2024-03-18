@@ -33,7 +33,7 @@ with tab1:
     
 with tab2:
     st.title("Flight Mapper")
-    folium_static(flight_map.m, width=200, height=200)
+    folium_static(flight_map.m, width=650, height=650)
 
     st.header("Mogelijke vertraagde vluchten") 
     st.subheader('*Verken de wereld met onze interactieve kaart:*') 
