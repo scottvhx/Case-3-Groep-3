@@ -49,3 +49,5 @@ flight34clean= flight34.drop_duplicates()
 flight35clean= flight35.drop_duplicates()
 flight36clean= flight36.drop_duplicates()
 flight37clean= flight37.drop_duplicates()
+
+print(scheduleclean.info())

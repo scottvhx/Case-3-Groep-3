@@ -5,7 +5,7 @@ import data_cleaning
 import pyproj
 
 # Subesetting ICAO, LON, LAT from dataframe
-airport_df = data_cleaning.airportclean[['ICAO', 'Longitude', 'Latitude']]
+airport_df = data_cleaning.airportclean[['Name', 'ICAO', 'Longitude', 'Latitude']]
 
 def draw_flight_path(start_ICAO, end_ICAO):
 
@@ -33,7 +33,14 @@ def draw_flight_path(start_ICAO, end_ICAO):
 # Draw Folium Map
 m = folium.Map(location=(0,0), tiles="cartodb positron", zoom_start=1.5)
 
-#draw_flight_path()
+draw_flight_path('LSZH', 'LGKO')
+draw_flight_path('LSZH', 'OLBA')
+draw_flight_path('LSZH', 'KEWR')
+draw_flight_path('LSZH', 'LYBE')
+draw_flight_path('LSZH', 'EHAM')
+draw_flight_path('LSZH', 'BKPR')
+draw_flight_path('LSZH', 'SAEZ')
+
 
 # Save map temporarily
 m.save('map_test.html')
