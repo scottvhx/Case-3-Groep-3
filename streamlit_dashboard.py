@@ -2,7 +2,9 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+from streamlit_folium import folium_static
 import data_cleaning
+import flight_map
 
 # Dit is het hoofd van de site
 st.title(':blue[Vertraagde vluchten :airplane:]')
@@ -30,6 +32,9 @@ with tab1:
 
     
 with tab2:
+    st.title("Flight Mapper")
+    folium_static(flight_map.m, width=200, height=200)
+
     st.header("Mogelijke vertraagde vluchten") 
     st.subheader('*Verken de wereld met onze interactieve kaart:*') 
     st.write("Duik dieper in de luchtvaartwereld met onze interactieve kaart. Volg de routes met de     hoogste vertragingen en zoom in op specifieke regio's om te zien waar de problemen het grootst zijn.")
