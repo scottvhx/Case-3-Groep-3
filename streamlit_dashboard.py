@@ -10,15 +10,6 @@ import flight_map
 st.title(':blue[Vertraagde vluchten :airplane:]')
 
     
-st.subheader('*Welkom bij onze luchtvaartanalysehub!*')
-
-st.write('Ontdek welke luchtvaartroutes wereldwijd het meest worden getroffen door vertragingen.      Van drukke binnenlandse vluchten tot internationale avonturen, we laten je de routes zien die je misschien wilt vermijden als je op tijd op je bestemming wilt aankomen.')
-
-# URL van de afbeelding
-image_url = "https://xenforo.com/community/media/plane-jpg.2194/full"
-
-# Afbeelding weergeven in Streamlit
-st.image(image_url, caption='Airplane', width=650)
 
 
 # tabs die worden verwezen naar de onderstaande arguments
@@ -27,7 +18,16 @@ tab1, tab2, tab3, tab4, = st.tabs([":blue[Data]", ":blue[Vertraagde vluchten]", 
 
 # Voeg inhoud toe aan elke tab
 with tab1:
-    st.header("Data")
+    st.subheader('*Welkom bij onze luchtvaartanalysehub!*')
+
+    st.write('Ontdek welke luchtvaartroutes wereldwijd het meest worden getroffen door vertragingen.      Van drukke binnenlandse vluchten tot internationale avonturen, we laten je de routes zien die je misschien wilt vermijden als je op tijd op je bestemming wilt aankomen.')
+
+# URL van de afbeelding
+    image_url = "https://xenforo.com/community/media/plane-jpg.2194/full"
+
+# Afbeelding weergeven in Streamlit
+    st.image(image_url, caption='Airplane', width=650)
+
 
 
     
