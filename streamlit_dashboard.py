@@ -36,12 +36,12 @@ with tab2:
         st.subheader('*Verken de wereld met onze interactieve kaart:*') 
         st.write("Duik dieper in de luchtvaartwereld met onze interactieve kaart. Volg de routes met de  hoogste vertragingen en zoom in op specifieke regio's om te zien waar de problemen het grootst zijn.")
     
-        st.title("Flight Mapper")
+        st.header("Flight Mapper")
         folium_static(flight_map.m, width=650, height=650)
 
 
  
-        st.subheader('*Barplot*') 
+        st.header('*Barplot*') 
 
         # Laad en reinig de gegevens
         #scheduleclean = pd.read_csv('schedule_airport.csv')
