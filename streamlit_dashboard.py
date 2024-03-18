@@ -41,49 +41,49 @@ with tab2:
 
 
  
-    st.subheader('*Barplot*') 
+        st.subheader('*Barplot*') 
 
-    # Laad en reinig de gegevens
-    #scheduleclean = pd.read_csv('schedule_airport.csv')
-    data_cleaning.scheduleclean['STA_STD_ltc'] = pd.to_datetime(data_cleaning.scheduleclean['STA_STD_ltc'])
-    data_cleaning.scheduleclean['ATA_ATD_ltc'] = pd.to_datetime(data_cleaning.scheduleclean['ATA_ATD_ltc'])
-    data_cleaning.scheduleclean['Arrival_Status'] = data_cleaning.scheduleclean['ATA_ATD_ltc'] - data_cleaning.scheduleclean['STA_STD_ltc'] > pd.Timedelta(0)
-    data_cleaning.scheduleclean['Departure_Status'] = data_cleaning.scheduleclean['STA_STD_ltc'] - data_cleaning.scheduleclean['ATA_ATD_ltc'] > pd.Timedelta(0)
+        # Laad en reinig de gegevens
+        #scheduleclean = pd.read_csv('schedule_airport.csv')
+        data_cleaning.scheduleclean['STA_STD_ltc'] = pd.to_datetime(data_cleaning.scheduleclean['STA_STD_ltc'])
+        data_cleaning.scheduleclean['ATA_ATD_ltc'] = pd.to_datetime(data_cleaning.scheduleclean['ATA_ATD_ltc'])
+        data_cleaning.scheduleclean['Arrival_Status'] = data_cleaning.scheduleclean['ATA_ATD_ltc'] - data_cleaning.scheduleclean['STA_STD_ltc'] > pd.Timedelta(0)
+        data_cleaning.scheduleclean['Departure_Status'] = data_cleaning.scheduleclean['STA_STD_ltc'] - data_cleaning.scheduleclean['ATA_ATD_ltc'] > pd.Timedelta(0)
 
-    # Bereken aantallen voor de plot
-    total_arrival_flights = len(data_cleaning.scheduleclean[data_cleaning.scheduleclean['LSV'].str.contains('L')])
-    total_departure_flights = len(data_cleaning.scheduleclean[data_cleaning.scheduleclean['LSV'].str.contains('S')])
-    arrival_delay_count = data_cleaning.scheduleclean[data_cleaning.scheduleclean['Arrival_Status'] & data_cleaning.scheduleclean['LSV'].str.contains('L')].shape[0]
-    arrival_ontime_count = total_arrival_flights - arrival_delay_count
-    departure_delay_count = data_cleaning.scheduleclean[data_cleaning.scheduleclean['Departure_Status'] & data_cleaning.scheduleclean['LSV'].str.contains('S')].shape[0]
-    departure_ontime_count = total_departure_flights - departure_delay_count
+        # Bereken aantallen voor de plot
+        total_arrival_flights = len(data_cleaning.scheduleclean[data_cleaning.scheduleclean['LSV'].str.contains('L')])
+        total_departure_flights = len(data_cleaning.scheduleclean[data_cleaning.scheduleclean['LSV'].str.contains('S')])
+        arrival_delay_count = data_cleaning.scheduleclean[data_cleaning.scheduleclean['Arrival_Status'] & data_cleaning.scheduleclean['LSV'].str.contains('L')].shape[0]
+        arrival_ontime_count = total_arrival_flights - arrival_delay_count
+        departure_delay_count = data_cleaning.scheduleclean[data_cleaning.scheduleclean['Departure_Status'] & data_cleaning.scheduleclean['LSV'].str.contains('S')].shape[0]
+        departure_ontime_count = total_departure_flights - departure_delay_count
 
-    # Set kleuren voor de balken
-    delay_color = '#069AF3'
-    ontime_color = '#13EAC9'
+        # Set kleuren voor de balken
+        delay_color = '#069AF3'
+        ontime_color = '#13EAC9'
 
-    # Maak de plot
-    fig, ax = plt.subplots(figsize=(10, 6))
-    bars = ax.bar(['Vertraagd bij Aankomst', 'Aankomst op Tijd', 'Vertraagd bij Vertrek', 'Tijdig Vertrek'], 
-                  [arrival_delay_count, arrival_ontime_count, departure_delay_count, departure_ontime_count],
-                  color=[delay_color, ontime_color, delay_color, ontime_color])
-    ax.set_xlabel('Vlucht Status')
-    ax.set_ylabel('Aantal Vluchten')
-    ax.set_title('Aantal Vluchten Verdeeld over Aankomst/Vertrek Status')
+        # Maak de plot
+        fig, ax = plt.subplots(figsize=(10, 6))
+        bars = ax.bar(['Vertraagd bij Aankomst', 'Aankomst op Tijd', 'Vertraagd bij Vertrek', 'Tijdig Vertrek'], 
+                      [arrival_delay_count, arrival_ontime_count, departure_delay_count, departure_ontime_count],
+                      color=[delay_color, ontime_color, delay_color, ontime_color])
+        ax.set_xlabel('Vlucht Status')
+        ax.set_ylabel('Aantal Vluchten')
+        ax.set_title('Aantal Vluchten Verdeeld over Aankomst/Vertrek Status')
 
-    # Voeg percentages toe aan de balken
-    for bar in bars[:2]:
-        height = bar.get_height()
-        ax.text(bar.get_x() + bar.get_width() / 2, height, f'{height / total_arrival_flights:.1%}', ha='center', va='bottom')
-    for bar in bars[2:]:
-        height = bar.get_height()
-        ax.text(bar.get_x() + bar.get_width() / 2, height, f'{height / total_departure_flights:.1%}', ha='center', va='bottom')
+        # Voeg percentages toe aan de balken
+        for bar in bars[:2]:
+            height = bar.get_height()
+            ax.text(bar.get_x() + bar.get_width() / 2, height, f'{height / total_arrival_flights:.1%}', ha='center', va='bottom')
+        for bar in bars[2:]:
+            height = bar.get_height()
+            ax.text(bar.get_x() + bar.get_width() / 2, height, f'{height / total_departure_flights:.1%}', ha='center', va='bottom')
 
-    # Toon de plot in Streamlit
-    st.pyplot(fig)
-    
-    st.write('*:blue[Conclusion out of the graph:]*')
-    st.write('Vertraging is vaker veroorzaakt op outstations, arrival delays/on time is 51.4%/48.6%. Grondafhandeling in ZRH is goed! Het aantal departure delays is namelijk erg verminderd tot een verhouding van ongeveer 20.8%/79.2%')
+        # Toon de plot in Streamlit
+        st.pyplot(fig)
+
+        st.write('*:blue[Conclusion out of the graph:]*')
+        st.write('Vertraging is vaker veroorzaakt op outstations, arrival delays/on time is 51.4%/48.6%. Grondafhandeling in ZRH is goed! Het aantal departure delays is namelijk erg verminderd tot een verhouding van ongeveer 20.8%/79.2%')
 
 with tab3:
     st.header("Voorspellingen")
