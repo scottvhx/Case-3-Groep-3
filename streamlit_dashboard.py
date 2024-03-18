@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from streamlit_folium import folium_static
 import data_cleaning
 import flight_map
+import plotly.express as px
 
 # Dit is het hoofd van de site
 st.title(':blue[Vertraagde vluchten :airplane:]')
