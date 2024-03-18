@@ -32,12 +32,14 @@ with tab1:
 
     
 with tab2:
+        st.header("Mogelijke vertraagde vluchten") 
+    st.subheader('*Verken de wereld met onze interactieve kaart:*') 
+    st.write("Duik dieper in de luchtvaartwereld met onze interactieve kaart. Volg de routes met de     hoogste vertragingen en zoom in op specifieke regio's om te zien waar de problemen het grootst zijn.")
+    
     st.title("Flight Mapper")
     folium_static(flight_map.m, width=650, height=650)
 
-    st.header("Mogelijke vertraagde vluchten") 
-    st.subheader('*Verken de wereld met onze interactieve kaart:*') 
-    st.write("Duik dieper in de luchtvaartwereld met onze interactieve kaart. Volg de routes met de     hoogste vertragingen en zoom in op specifieke regio's om te zien waar de problemen het grootst zijn.")
+
  
     st.subheader('*Barplot*') 
 
