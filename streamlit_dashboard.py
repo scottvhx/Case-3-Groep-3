@@ -82,7 +82,7 @@ with tab2:
         # Toon de plot in Streamlit
         st.pyplot(fig)
 
-        st.write('*:blue[Conclusion out of the graph:]*')
+        st.write('*:blue[Conclusie uit de barplot:]*')
         st.write('Vertraging is vaker veroorzaakt op outstations, arrival delays/on time is 51.4%/48.6%. Grondafhandeling in ZRH is goed! Het aantal departure delays is namelijk erg verminderd tot een verhouding van ongeveer 20.8%/79.2%')
 
 with tab3:
