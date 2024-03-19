@@ -177,10 +177,10 @@ with tab5:
     # Sidebar
     with st.sidebar:
         st.subheader('Opties')
-        selected_option = st.selectbox('Kies een optie', ['Aantal vluchten', 'Percentage'])
+        selected_option = st.selectbox('Kies een optie', ['Vlucht Status', 'Percentage'])
 
     # Plot afhankelijk van de geselecteerde optie
-    if selected_option == 'Aantal vluchten':
+    if selected_option == 'Vlucht Status':
         fig.update_traces(textposition='outside')  # Update the trace to show text outside the bars
         st.plotly_chart(fig)
     elif selected_option == 'Percentage':
