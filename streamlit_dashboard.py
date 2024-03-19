@@ -132,13 +132,6 @@ with tab5:
 
     st.write('test')
 
-   
-
-    # Subheader voor de Barplot in de zijbalk
-    st.sidebar.subheader('Barplot')
-
-    # Selectbox voor kleurselectie
-    color_discrete_map = st.sidebar.selectbox('Kies een kleur', ['Blauw', 'Groen', 'Rood'], key='color_discrete_map')
 
     # Load and clean the data
     data_cleaning.scheduleclean['STA_STD_ltc'] = pd.to_datetime(data_cleaning.scheduleclean['STA_STD_ltc'])
@@ -160,25 +153,42 @@ with tab5:
     departure_delay_percent = round(departure_delay_count / total_departure_flights * 100, 1)
     departure_ontime_percent = round(departure_ontime_count / total_departure_flights * 100, 1)
 
-    # Gegevens voor de plot
+    # Create a DataFrame for the plot
     data = {
         'Vlucht Status': ['Vertraagd bij Aankomst', 'Aankomst op Tijd', 'Vertraagd bij Vertrek', 'Tijdig Vertrek'],
         'Aantal Vluchten': [arrival_delay_count, arrival_ontime_count, departure_delay_count, departure_ontime_count],
         'Percentage': [arrival_delay_percent, arrival_ontime_percent, departure_delay_percent, departure_ontime_percent]
     }
+    df = pd.DataFrame(data)
 
-    # Maak de plot met Plotly Express
-    fig = px.bar(pd.DataFrame(data), 
-                 x='Vlucht Status', y='Aantal Vluchten', text='Percentage', 
-                 color='Vlucht Status', 
-                 color_discrete_map={'Vertraagd bij Aankomst': 'red', 'Aankomst op Tijd': 'green', 
-                                     'Vertraagd bij Vertrek': 'red', 'Tijdig Vertrek': 'green'}, 
-                 labels={'Aantal Vluchten': 'Aantal Vluchten', 'Percentage': 'Percentage'}, 
+    # Define colors
+    delay_color = '#069AF3'
+    ontime_color = '#13EAC9'
+
+    # Create the plot using Plotly Express
+    fig = px.bar(df, x='Vlucht Status', y='Aantal Vluchten', text='Percentage',
+                 color='Vlucht Status', color_discrete_map={'Vertraagd bij Aankomst': delay_color,
+                                                               'Aankomst op Tijd': ontime_color,
+                                                               'Vertraagd bij Vertrek': delay_color,
+                                                               'Tijdig Vertrek': ontime_color},
+                 labels={'Aantal Vluchten': 'Aantal Vluchten', 'Percentage': 'Percentage'},
                  title='Aantal Vluchten Verdeeld over Aankomst/Vertrek Status')
 
-    # Toon de plot in de zijbalk
-    st.sidebar.plotly_chart(fig)
+    # Sidebar
+    with st.sidebar:
+        st.subheader('Opties')
+        selected_option = st.selectbox('Kies een optie', ['Aantal vluchten', 'Percentage'])
+
+    # Plot afhankelijk van de geselecteerde optie
+    if selected_option == 'Aantal vluchten':
+        fig.update_traces(textposition='outside')  # Update the trace to show text outside the bars
+        st.plotly_chart(fig)
+    elif selected_option == 'Percentage':
+        fig.update_traces(texttemplate='%{text}%', textposition='outside')  # Update the trace to show percentage values
+        st.plotly_chart(fig)
 
 
+
+   
 
 
