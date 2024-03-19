@@ -7,6 +7,11 @@ import data_cleaning
 import flight_map
 import plotly.express as px
 
+
+st.set_page_config(layout='wide', initial_sidebar_state='expanded')
+
+
+
 # Dit is het hoofd van de site
 st.title(':blue[Vertraagde vluchten :airplane:]')
 
