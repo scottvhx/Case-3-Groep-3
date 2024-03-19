@@ -7,3 +7,4 @@ openpyxl==3.0.10
 numpy==1.24.3
 pandas==2.0.3
 pyproj==3.6.1
+altair==5.0.1
