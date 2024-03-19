@@ -133,6 +133,8 @@ with tab5:
     st.write('test')
 
 
+
+
     # Load and clean the data
     data_cleaning.scheduleclean['STA_STD_ltc'] = pd.to_datetime(data_cleaning.scheduleclean['STA_STD_ltc'])
     data_cleaning.scheduleclean['ATA_ATD_ltc'] = pd.to_datetime(data_cleaning.scheduleclean['ATA_ATD_ltc'])
@@ -176,16 +178,14 @@ with tab5:
 
     # Sidebar
     with st.sidebar:
-        st.subheader('Opties')
-        selected_option = st.selectbox('Kies een optie', ['Vlucht Status', 'Percentage'])
+        st.subheader('Barplot')
+        selected_option = st.selectbox('Kies een optie', ['Aantal vluchten', 'Percentage'])
 
     # Plot afhankelijk van de geselecteerde optie
-    if selected_option == 'Vlucht Status':
-        fig.update_traces(textposition='outside')  # Update the trace to show text outside the bars
-        st.plotly_chart(fig)
+    if selected_option == 'Aantal vluchten':
+        st.plotly_chart(fig.update_traces(textposition='outside'))  # Update the trace to show text outside the bars
     elif selected_option == 'Percentage':
-        fig.update_traces(texttemplate='%{text}%', textposition='outside')  # Update the trace to show percentage values
-        st.plotly_chart(fig)
+        st.plotly_chart(fig.update_traces(texttemplate='%{text}%', textposition='outside'))  # Update the trace to show percentage values
 
 
 
