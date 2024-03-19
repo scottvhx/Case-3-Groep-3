@@ -138,7 +138,7 @@ with tab5:
     st.sidebar.subheader('Barplot')
 
     # Selectbox voor kleurselectie
-    selected_color = st.sidebar.selectbox('Kies een kleur', ['Blauw', 'Groen', 'Rood'], key='color_discrete_map')
+    color_discrete_map = st.sidebar.selectbox('Kies een kleur', ['Blauw', 'Groen', 'Rood'], key='color_discrete_map')
 
     # Load and clean the data
     data_cleaning.scheduleclean['STA_STD_ltc'] = pd.to_datetime(data_cleaning.scheduleclean['STA_STD_ltc'])
