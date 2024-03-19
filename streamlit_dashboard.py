@@ -12,7 +12,7 @@ import plost
 st.set_page_config(layout='wide', initial_sidebar_state='expanded')
 
 st.sidebar.header('🛬🛫 `Vertraagde Vluchten`')
-st.sidebar.subheader(' Barplot')
+
 
     
 
@@ -175,7 +175,7 @@ with tab5:
 
     # Sidebar
     with st.sidebar:
-        st.subheader('Opties')
+        st.subheader('Barplot')
         selected_option = st.selectbox('Kies een optie', ['Aankomst', 'Vertrek'])
 
     # Map opties naar kleuren
