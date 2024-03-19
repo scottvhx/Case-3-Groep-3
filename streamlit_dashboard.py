@@ -134,7 +134,6 @@ with tab5:
 
 
 
-
     # Load and clean the data
     data_cleaning.scheduleclean['STA_STD_ltc'] = pd.to_datetime(data_cleaning.scheduleclean['STA_STD_ltc'])
     data_cleaning.scheduleclean['ATA_ATD_ltc'] = pd.to_datetime(data_cleaning.scheduleclean['ATA_ATD_ltc'])
@@ -169,23 +168,29 @@ with tab5:
 
     # Create the plot using Plotly Express
     fig = px.bar(df, x='Vlucht Status', y='Aantal Vluchten', text='Percentage',
-                 color='Vlucht Status', color_discrete_map={'Vertraagd bij Aankomst': delay_color,
-                                                               'Aankomst op Tijd': ontime_color,
-                                                               'Vertraagd bij Vertrek': delay_color,
-                                                               'Tijdig Vertrek': ontime_color},
+                 color='Vlucht Status', 
+                 color_discrete_map={'Vertraagd bij Aankomst': delay_color,
+                                     'Aankomst op Tijd': ontime_color,
+                                     'Vertraagd bij Vertrek': delay_color,
+                                     'Tijdig Vertrek': ontime_color},
                  labels={'Aantal Vluchten': 'Aantal Vluchten', 'Percentage': 'Percentage'},
                  title='Aantal Vluchten Verdeeld over Aankomst/Vertrek Status')
 
     # Sidebar
     with st.sidebar:
-        st.subheader('Barplot')
-        selected_option = st.selectbox('Kies een optie', ['Vlucht Status', 'Percentage'])
+        st.subheader('Opties')
+        selected_option = st.selectbox('Kies een optie', ['Vertraagd bij Aankomst', 'Aankomst op Tijd', 'Vertraagd bij Vertrek', 'Tijdig Vertrek'])
 
-    # Plot afhankelijk van de geselecteerde optie
-    if selected_option == 'Vlucht Status':
-        st.plotly_chart(fig.update_traces(textposition='outside'))  # Update the trace to show text outside the bars
-    elif selected_option == 'Percentage':
-        st.plotly_chart(fig.update_traces(texttemplate='%{text}%', textposition='outside'))  # Update the trace to show percentage values
+    # Plot aanpassen op basis van de geselecteerde optie
+    color_map = {option: delay_color if 'Vertraagd' in option else ontime_color for option in df['Vlucht Status']}
+    fig.update_traces(marker_color=[color_map[option] for option in df['Vlucht Status']])
+
+    # Plot weergeven
+    st.plotly_chart(fig)
+
+
+
+   
 
 
 
