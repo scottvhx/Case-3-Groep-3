@@ -102,7 +102,7 @@ with tab3:
     st.write("Ben je van plan om binnenkort te vliegen? Gebruik onze voorspellingsmodule om te zien hoeveel vertraging je kunt verwachten op jouw specifieke route. Met behulp van geavanceerde modellen kunnen we je een nauwkeurige inschatting geven, zodat je goed voorbereid op reis kunt gaan!")
 
 with st.sidebar:
-    st.title('Voorspelling van een vlucht')
+    st.title('🛬🛫 Vertraagde Vluchten')
 
 
 #################
