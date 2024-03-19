@@ -10,6 +10,9 @@ import plotly.express as px
 
 st.set_page_config(layout='wide', initial_sidebar_state='expanded')
 
+with st.sidebar:
+    st.title('🛬🛫 Vertraagde Vluchten')
+
 
 
 # Dit is het hoofd van de site
