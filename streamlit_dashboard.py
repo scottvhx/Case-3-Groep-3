@@ -6,12 +6,16 @@ from streamlit_folium import folium_static
 import data_cleaning
 import flight_map
 import plotly.express as px
+import plost
 
 
 st.set_page_config(layout='wide', initial_sidebar_state='expanded')
 
-with st.sidebar:
-    st.title('🛬🛫 Vertraagde Vluchten')
+st.sidebar.header('🛬🛫 `Vertraagde Vluchten`')
+st.sidebar.subheader(' Barplot')
+
+    
+
 
 
 
