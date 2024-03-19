@@ -166,28 +166,31 @@ with tab5:
     delay_color = '#069AF3'
     ontime_color = '#13EAC9'
 
-    # Create the plot using Plotly Express
-    fig = px.bar(df, x='Vlucht Status', y='Aantal Vluchten', text='Percentage',
-                 color='Vlucht Status', 
-                 color_discrete_map={'Vertraagd bij Aankomst': delay_color,
-                                     'Aankomst op Tijd': ontime_color,
-                                     'Vertraagd bij Vertrek': delay_color,
-                                     'Tijdig Vertrek': ontime_color},
-                 labels={'Aantal Vluchten': 'Aantal Vluchten', 'Percentage': 'Percentage'},
-                 title='Aantal Vluchten Verdeeld over Aankomst/Vertrek Status')
-
     # Sidebar
     with st.sidebar:
         st.subheader('Opties')
         selected_option = st.selectbox('Kies een optie', ['Vertraagd bij Aankomst', 'Aankomst op Tijd', 'Vertraagd bij Vertrek', 'Tijdig Vertrek'])
 
-    # Plot aanpassen op basis van de geselecteerde optie
-    color_map = {option: delay_color if 'Vertraagd' in option else ontime_color for option in df['Vlucht Status']}
-    fig.update_traces(marker_color=[color_map[option] for option in df['Vlucht Status']])
+    # Map opties naar kleuren
+    color_map = {
+        'Vertraagd bij Aankomst': delay_color if selected_option == 'Vertraagd bij Aankomst' else ontime_color,
+        'Aankomst op Tijd': delay_color if selected_option == 'Aankomst op Tijd' else ontime_color,
+        'Vertraagd bij Vertrek': delay_color if selected_option == 'Vertraagd bij Vertrek' else ontime_color,
+        'Tijdig Vertrek': delay_color if selected_option == 'Tijdig Vertrek' else ontime_color
+    }
 
-    # Plot weergeven
+    # Create the plot using Plotly Express
+    fig = px.bar(df, x='Vlucht Status', y='Aantal Vluchten', text='Percentage',
+                 color='Vlucht Status',
+                 color_discrete_map=color_map,
+                 labels={'Aantal Vluchten': 'Aantal Vluchten', 'Percentage': 'Percentage'},
+                 title='Aantal Vluchten Verdeeld over Aankomst/Vertrek Status')
+
+    # Show the plot
     st.plotly_chart(fig)
 
+
+    
 
 
    
