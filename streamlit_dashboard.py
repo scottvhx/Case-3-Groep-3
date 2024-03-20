@@ -172,7 +172,7 @@ with tab5:
 
     selected_option = st.selectbox('Kies een optie', 'ACT')
      # Create the plot using Plotly Express
-            if selected_option == 'ACT':
+    if selected_option == 'ACT':
                 fig = px.bar(avg_delay_per_aircraft_type, x='ACT', y='Average_Delay_hours', 
                  title='Average Delay per Aircraft Type',
                  labels={'ACT': 'Aircraft Type', 'Average_Delay_hours': 'Average Delay (hours)'},
