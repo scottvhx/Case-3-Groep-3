@@ -27,7 +27,7 @@ st.title(':blue[Vertraagde vluchten :airplane:]')
 
 # tabs die worden verwezen naar de onderstaande arguments
 
-tab1, tab2, tab3, tab4, tab5= st.tabs([":blue[Data]", ":blue[Vertraagde vluchten]", ":blue[Voorspellingen]", ":red[Conclusie]", "blue[Bar-plot]"])
+tab1, tab2, tab3, tab4, tab5= st.tabs([":blue[Data]", ":blue[Vertraagde vluchten]", ":blue[Voorspellingen]", ":red[Conclusie]", ":blue[Bar-plot]"])
 
 ############################
 
@@ -203,7 +203,7 @@ with tab5:
 
 
     # Load aircraft types and max passenger capacity from Excel file
-    aircraft_capacity = pd.read_excel('AC-MaxPassengers.xlsx')  # Update with your file path
+    aircraft_capacity = pd.read_excel('data/AC-MaxPassengers.xlsx')  # Update with your file path
 
     # Assuming avg_delay_per_aircraft_type DataFrame contains 'ACT' and 'Average_Delay_hours' columns
 
