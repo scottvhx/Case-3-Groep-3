@@ -19,6 +19,6 @@ print(flight_schedule_df.head(10))
 # Convert 'Delay' column to numeric format (hours)
 flight_analysis.scheduleclean['Delay_hours'] = pd.to_timedelta(flight_analysis.scheduleclean['Delay']).dt.total_seconds() / 3600
 
- # Grouping by Aircraft Type (FLT) and calculating the average Delay
- avg_delay_per_aircraft_type = flight_analysis.scheduleclean.groupby('ACT')['Delay_hours'].mean().reset_index()
+# Grouping by Aircraft Type (FLT) and calculating the average Delay
+avg_delay_per_aircraft_type = flight_analysis.scheduleclean.groupby('ACT')['Delay_hours'].mean().reset_index()
 
