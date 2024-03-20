@@ -157,7 +157,7 @@ with tab5:
     data_cleaning.scheduleclean['Delay_hours'] = pd.to_timedelta(data_cleaning.scheduleclean['Delay']).dt.total_seconds() / 3600
 
     # Grouping by Aircraft Type (FLT) and calculating the average Delay
-    avg_delay_per_aircraft_type = scheduleclean.groupby('ACT')['Delay_hours'].mean().reset_index()
+    avg_delay_per_aircraft_type = data_cleaning.scheduleclean.groupby('ACT')['Delay_hours'].mean().reset_index()
 
     # Renaming the columns for clarity
     avg_delay_per_aircraft_type.columns = ['ACT', 'Average_Delay_hours']
