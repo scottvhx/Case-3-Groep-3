@@ -153,9 +153,6 @@ with tab5:
     st.write('test')
 
 
-    # Load data
-    scheduleclean = pd.read_csv("scheduleclean.csv")  # Vervang "scheduleclean.csv" door het juiste pad naar je dataset
-
     # Convert 'Delay' column to numeric format (hours)
     scheduleclean['Delay_hours'] = pd.to_timedelta(scheduleclean['Delay']).dt.total_seconds() / 3600
 
