@@ -154,51 +154,25 @@ with tab5:
 
 
     # Convert 'Delay' column to numeric format (hours)
-    scheduleclean['Delay_hours'] = pd.to_timedelta(data_cleaning.scheduleclean['Delay']).dt.total_seconds() / 3600
+    scheduleclean['Delay_hours'] = pd.to_timedelta(scheduleclean['Delay']).dt.total_seconds() / 3600
 
-    # Grouping by Aircraft Type (ACT) and calculating the average Delay
+    # Grouping by Aircraft Type (FLT) and calculating the average Delay
     avg_delay_per_aircraft_type = scheduleclean.groupby('ACT')['Delay_hours'].mean().reset_index()
 
     # Renaming the columns for clarity
     avg_delay_per_aircraft_type.columns = ['ACT', 'Average_Delay_hours']
 
-    # Streamlit app
-    st.title('Gemiddelde Vertraging per Vliegtuigtype')
+    # Create bar plot with Plotly Express
+    fig = px.bar(avg_delay_per_aircraft_type, x='ACT', y='Average_Delay_hours', 
+                 title='Average Delay per Aircraft Type',
+                 labels={'ACT': 'Aircraft Type', 'Average_Delay_hours': 'Average Delay (hours)'},
+                 template='plotly_white')  # Use 'plotly_white' template for light background
 
-    # Dropdown voor het selecteren van het te tonen diagram
-    chart_selection = st.selectbox("Selecteer diagram:", ["Gemiddelde Vertraging", "Aantal Vluchten"])
+    # Rotate x-axis labels for better readability
+    fig.update_xaxes(tickangle=45)
 
-    # Creëer het diagram op basis van de selectie
-    if chart_selection == "Gemiddelde Vertraging":
-        # Maak een bar plot met Plotly Express
-        fig = px.bar(avg_delay_per_aircraft_type, x='ACT', y='Average_Delay_hours', 
-                     title='Gemiddelde Vertraging per Vliegtuigtype',
-                     labels={'ACT': 'Vliegtuigtype', 'Average_Delay_hours': 'Gemiddelde Vertraging (uren)'},
-                     template='plotly_white')  # Gebruik 'plotly_white' template voor lichte achtergrond
-
-        # Draai x-as labels voor betere leesbaarheid
-        fig.update_xaxes(tickangle=45)
-
-        # Toon het diagram
-        st.plotly_chart(fig)
-
-    elif chart_selection == "Aantal Vluchten":
-        # Bereken het aantal vluchten per vliegtuigtype
-        flights_per_aircraft_type = scheduleclean['ACT'].value_counts().reset_index()
-        flights_per_aircraft_type.columns = ['ACT', 'Number_of_Flights']
-
-        # Maak een staafdiagram met Plotly Express
-        fig = px.bar(flights_per_aircraft_type, x='ACT', y='Number_of_Flights', 
-                     title='Aantal Vluchten per Vliegtuigtype',
-                     labels={'ACT': 'Vliegtuigtype', 'Number_of_Flights': 'Aantal Vluchten'},
-                     template='plotly_white')  # Gebruik 'plotly_white' template voor lichte achtergrond
-
-        # Draai x-as labels voor betere leesbaarheid
-        fig.update_xaxes(tickangle=45)
-
-        # Toon het diagram
-        st.plotly_chart(fig)
-
+    # Show the plot
+    fig.show()
 
 
 
