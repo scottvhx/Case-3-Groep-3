@@ -202,44 +202,7 @@ with tab5:
 
 
 
-    # Load aircraft types and max passenger capacity from Excel file
-    aircraft_capacity = pd.read_excel('AC-MaxPassengers.xlsx')  # Update with your file path
-
-    # Assuming avg_delay_per_aircraft_type DataFrame contains 'ACT' and 'Average_Delay_hours' columns
-
-    # Group aircraft types based on max passenger capacity
-    grouped_aircraft = aircraft_capacity.groupby('Max passengers')
-
-    # Create a dropdown menu widget
-    with st.sidebar:
-    selected_option = st.selectbox('Aircraft Category:', ['All Aircraft', 'All Small Aircraft', 'All Narrow Aircraft', 'All Wide Aircraft'])
-    
-
-    def plot_delay_per_aircraft_category(category):
-        if category.startswith('All'):
-            # Plot all aircraft types
-            if category == 'All Aircraft':
-                filtered_data = avg_delay_per_aircraft_type  # No filtering needed for all aircraft
-            elif category == 'All Small Aircraft':
-                filtered_data = avg_delay_per_aircraft_type[avg_delay_per_aircraft_type['ACT'].isin(aircraft_capacity[aircraft_capacity['Max passengers'] <= 100]['Aircraft'])]
-            elif category == 'All Narrow Aircraft':
-                filtered_data = avg_delay_per_aircraft_type[avg_delay_per_aircraft_type['ACT'].isin(aircraft_capacity[(aircraft_capacity['Max passengers'] > 100) & (aircraft_capacity['Max passengers'] <= 250)]['Aircraft'])]
-            elif category == 'All Wide Aircraft':
-                filtered_data = avg_delay_per_aircraft_type[avg_delay_per_aircraft_type['ACT'].isin(aircraft_capacity[aircraft_capacity['Max passengers'] > 250]['Aircraft'])]
-        else:
-            # Plot specific aircraft type
-            filtered_data = avg_delay_per_aircraft_type[avg_delay_per_aircraft_type['ACT'].isin(grouped_aircraft.get_group(category)['Aircraft'])]
-
-        # Create a bar plot using Plotly Express
-        fig = px.bar(filtered_data, x='ACT', y='Average_Delay_hours', 
-                     labels={'ACT': 'Aircraft Type', 'Average_Delay_hours': 'Average Delay (hours)'},
-                     title='Average Delay per Aircraft Type')
-        fig.update_layout(xaxis={'categoryorder':'total descending'})  # Sort x-axis categories by total
-        
-        
-        # show plot
-        st.plotly_chart(fig)
-
+  
 
 
 
