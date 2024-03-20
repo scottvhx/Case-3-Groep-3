@@ -27,7 +27,7 @@ st.title(':blue[Vertraagde vluchten :airplane:]')
 
 # tabs die worden verwezen naar de onderstaande arguments
 
-tab1, tab2, tab3, tab4, tab5= st.tabs([":blue[Data]", ":blue[Vertraagde vluchten]", ":blue[Voorspellingen]", ":red[Conclusie]", ":blue[Bar-plot]"])
+tab1, tab2, tab3, tab4, tab5= st.tabs([":blue[Data]", ":blue[Vertraagde vluchten]", ":blue[Voorspellingen]", ":red[Conclusie]", "blue[Bar-plot]"])
 
 ############################
 
@@ -203,20 +203,15 @@ with tab5:
 
 
     # Load aircraft types and max passenger capacity from Excel file
-    aircraft_capacity = pd.read_excel('data/AC-MaxPassengers.xlsx')  # Update with your file path
+    aircraft_capacity = pd.read_excel('AC-MaxPassengers.xlsx')  # Update with your file path
 
     # Assuming avg_delay_per_aircraft_type DataFrame contains 'ACT' and 'Average_Delay_hours' columns
 
     # Group aircraft types based on max passenger capacity
     grouped_aircraft = aircraft_capacity.groupby('Max passengers')
 
-    # Create dropdown menu options
-    dropdown_options = ['All Aircraft', 'All Small Aircraft', 'All Narrow Aircraft', 'All Wide Aircraft']
-    dropdown_options.extend(grouped_aircraft.groups.keys())
-
     # Create a dropdown menu widget
     with st.sidebar:
-    st.subheader('Barplot')
     selected_option = st.selectbox('Aircraft Category:', ['All Aircraft', 'All Small Aircraft', 'All Narrow Aircraft', 'All Wide Aircraft'])
     
 
@@ -240,10 +235,12 @@ with tab5:
                      labels={'ACT': 'Aircraft Type', 'Average_Delay_hours': 'Average Delay (hours)'},
                      title='Average Delay per Aircraft Type')
         fig.update_layout(xaxis={'categoryorder':'total descending'})  # Sort x-axis categories by total
+        
+        
+        # show plot
         st.plotly_chart(fig)
 
-    # Call the function with the selected option
-    plot_delay_per_aircraft_category(selected_option)
+
 
 
 
