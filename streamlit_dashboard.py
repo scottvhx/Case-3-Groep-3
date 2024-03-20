@@ -154,71 +154,7 @@ with tab5:
 
 
 
-    # Load and clean the data
-    data_cleaning.scheduleclean['STA_STD_ltc'] = pd.to_datetime(data_cleaning.scheduleclean['STA_STD_ltc'])
-    data_cleaning.scheduleclean['ATA_ATD_ltc'] = pd.to_datetime(data_cleaning.scheduleclean['ATA_ATD_ltc'])
-    data_cleaning.scheduleclean['Arrival_Status'] = data_cleaning.scheduleclean['ATA_ATD_ltc'] - data_cleaning.scheduleclean['STA_STD_ltc'] > pd.Timedelta(0)
-    data_cleaning.scheduleclean['Departure_Status'] = data_cleaning.scheduleclean['STA_STD_ltc'] - data_cleaning.scheduleclean['ATA_ATD_ltc'] > pd.Timedelta(0)
-
-    # Calculate counts for the plot
-    total_arrival_flights = len(data_cleaning.scheduleclean[data_cleaning.scheduleclean['LSV'].str.contains('L')])
-    total_departure_flights = len(data_cleaning.scheduleclean[data_cleaning.scheduleclean['LSV'].str.contains('S')])
-    arrival_delay_count = data_cleaning.scheduleclean[data_cleaning.scheduleclean['Arrival_Status'] & data_cleaning.scheduleclean['LSV'].str.contains('L')].shape[0]
-    arrival_ontime_count = total_arrival_flights - arrival_delay_count
-    departure_delay_count = data_cleaning.scheduleclean[data_cleaning.scheduleclean['Departure_Status'] & data_cleaning.scheduleclean['LSV'].str.contains('S')].shape[0]
-    departure_ontime_count = total_departure_flights - departure_delay_count
-
-    # Calculate percentages
-    arrival_delay_percent = round(arrival_delay_count / total_arrival_flights * 100, 1)
-    arrival_ontime_percent = round(arrival_ontime_count / total_arrival_flights * 100, 1)
-    departure_delay_percent = round(departure_delay_count / total_departure_flights * 100, 1)
-    departure_ontime_percent = round(departure_ontime_count / total_departure_flights * 100, 1)
-
-    # Create a DataFrame for the plot
-    data_arrival = {
-        'Vlucht Status': ['Vertraagd bij Aankomst', 'Aankomst op Tijd'],
-        'Aantal Vluchten': [arrival_delay_count, arrival_ontime_count],
-        'Percentage': [arrival_delay_percent, arrival_ontime_percent]
-    }
-    df_arrival = pd.DataFrame(data_arrival)
-
-    data_departure = {
-        'Vlucht Status': ['Vertraagd bij Vertrek', 'Tijdig Vertrek'],
-        'Aantal Vluchten': [departure_delay_count, departure_ontime_count],
-        'Percentage': [departure_delay_percent, departure_ontime_percent]
-    }
-    df_departure = pd.DataFrame(data_departure)
-
-    # Define colors
-    delay_color = '#069AF3'
-    ontime_color = '#13EAC9'
-
-    # Sidebar
-    with st.sidebar:
-        st.subheader('Barplot')
-        selected_option = st.selectbox('Kies een optie', ['Aankomst', 'Vertrek'])
-
-    # Map opties naar kleuren
-    color_map_arrival = {'Vertraagd bij Aankomst': delay_color, 'Aankomst op Tijd': ontime_color}
-    color_map_departure = {'Vertraagd bij Vertrek': delay_color, 'Tijdig Vertrek': ontime_color}
-
-    # Create the plot using Plotly Express
-    if selected_option == 'Aankomst':
-        fig = px.bar(df_arrival, x='Vlucht Status', y='Aantal Vluchten', text='Percentage',
-                     color='Vlucht Status',
-                     color_discrete_map=color_map_arrival,
-                     labels={'Aantal Vluchten': 'Aantal Vluchten', 'Percentage': 'Percentage'},
-                     title='Aantal Vluchten Verdeeld over Aankomst Status')
-    else:
-        fig = px.bar(df_departure, x='Vlucht Status', y='Aantal Vluchten', text='Percentage',
-                     color='Vlucht Status',
-                     color_discrete_map=color_map_departure,
-                     labels={'Aantal Vluchten': 'Aantal Vluchten', 'Percentage': 'Percentage'},
-                     title='Aantal Vluchten Verdeeld over Vertrek Status')
-
-    # Show the plot
-    st.plotly_chart(fig)
-
+    
 
 
 
