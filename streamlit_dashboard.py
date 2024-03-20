@@ -215,8 +215,8 @@ with tab5:
     dropdown_options.extend(grouped_aircraft.groups.keys())
 
     # Create a dropdown menu widget
-     with st.sidebar:
-        st.subheader('Barplot')
+    with st.sidebar:
+    st.subheader('Barplot')
     selected_option = st.selectbox('Aircraft Category:', ['All Aircraft', 'All Small Aircraft', 'All Narrow Aircraft', 'All Wide Aircraft'])
     
 
