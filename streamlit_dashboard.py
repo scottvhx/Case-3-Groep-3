@@ -57,7 +57,7 @@ with tab2:
 
 #############################
         st.header('*Barplot*') 
-
+  
         # Load and clean the data
         data_cleaning.scheduleclean['STA_STD_ltc'] = pd.to_datetime(data_cleaning.scheduleclean['STA_STD_ltc'])
         data_cleaning.scheduleclean['ATA_ATD_ltc'] = pd.to_datetime(data_cleaning.scheduleclean['ATA_ATD_ltc'])
@@ -154,10 +154,10 @@ with tab5:
 
 
     # Convert 'Delay' column to numeric format (hours)
-    fight_analysis.scheduleclean['Delay_hours'] = pd.to_timedelta(fight_analysis.scheduleclean['Delay']).dt.total_seconds() / 3600
+    flight_analysis.scheduleclean['Delay_hours'] = pd.to_timedelta(flight_analysis.scheduleclean['Delay']).dt.total_seconds() / 3600
 
     # Grouping by Aircraft Type (FLT) and calculating the average Delay
-    avg_delay_per_aircraft_type = fight_analysis.scheduleclean.groupby('ACT')['Delay_hours'].mean().reset_index()
+    avg_delay_per_aircraft_type = flight_analysis.scheduleclean.groupby('ACT')['Delay_hours'].mean().reset_index()
 
     # Renaming the columns for clarity
     avg_delay_per_aircraft_type.columns = ['ACT', 'Average_Delay_hours']
@@ -171,7 +171,7 @@ with tab5:
     # Rotate x-axis labels for better readability
     fig.update_xaxes(tickangle=45)
 
-    # Show the plot
+   # Show the plot
     fig.show()
 
 
