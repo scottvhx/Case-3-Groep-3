@@ -79,29 +79,49 @@ with tab2:
         departure_ontime_percent = round(departure_ontime_count / total_departure_flights * 100, 1)
 
         # Create a DataFrame for the plot
-        data = {
-            'Vlucht Status': ['Vertraagd bij Aankomst', 'Aankomst op Tijd', 'Vertraagd bij Vertrek', 'Tijdig Vertrek'],
-            'Aantal Vluchten': [arrival_delay_count, arrival_ontime_count, departure_delay_count, departure_ontime_count],
-            'Percentage': [arrival_delay_percent, arrival_ontime_percent, departure_delay_percent, departure_ontime_percent]
+        data_arrival = {
+            'Vlucht Status': ['Vertraagd bij Aankomst', 'Aankomst op Tijd'],
+            'Aantal Vluchten': [arrival_delay_count, arrival_ontime_count],
+            'Percentage': [arrival_delay_percent, arrival_ontime_percent]
         }
-        df = pd.DataFrame(data)
+        df_arrival = pd.DataFrame(data_arrival)
+
+        data_departure = {
+            'Vlucht Status': ['Vertraagd bij Vertrek', 'Tijdig Vertrek'],
+            'Aantal Vluchten': [departure_delay_count, departure_ontime_count],
+            'Percentage': [departure_delay_percent, departure_ontime_percent]
+        }
+        df_departure = pd.DataFrame(data_departure)
 
         # Define colors
         delay_color = '#069AF3'
         ontime_color = '#13EAC9'
 
+        # Sidebar
+        with st.sidebar:
+            st.subheader('Barplot')
+            selected_option = st.selectbox('Kies een optie', ['Aankomst', 'Vertrek'])
+
+        # Map opties naar kleuren
+        color_map_arrival = {'Vertraagd bij Aankomst': delay_color, 'Aankomst op Tijd': ontime_color}
+        color_map_departure = {'Vertraagd bij Vertrek': delay_color, 'Tijdig Vertrek': ontime_color}
+
         # Create the plot using Plotly Express
-        fig = px.bar(df, x='Vlucht Status', y='Aantal Vluchten', text='Percentage',
-                     color='Vlucht Status', color_discrete_map={'Vertraagd bij Aankomst': delay_color,
-                                                                   'Aankomst op Tijd': ontime_color,
-                                                                   'Vertraagd bij Vertrek': delay_color,
-                                                                   'Tijdig Vertrek': ontime_color},
-                     labels={'Aantal Vluchten': 'Aantal Vluchten', 'Percentage': 'Percentage'},
-                     title='Aantal Vluchten Verdeeld over Aankomst/Vertrek Status')
+        if selected_option == 'Aankomst':
+            fig = px.bar(df_arrival, x='Vlucht Status', y='Aantal Vluchten', text='Percentage',
+                         color='Vlucht Status',
+                         color_discrete_map=color_map_arrival,
+                         labels={'Aantal Vluchten': 'Aantal Vluchten', 'Percentage': 'Percentage'},
+                         title='Aantal Vluchten Verdeeld over Aankomst Status')
+        else:
+            fig = px.bar(df_departure, x='Vlucht Status', y='Aantal Vluchten', text='Percentage',
+                         color='Vlucht Status',
+                         color_discrete_map=color_map_departure,
+                         labels={'Aantal Vluchten': 'Aantal Vluchten', 'Percentage': 'Percentage'},
+                         title='Aantal Vluchten Verdeeld over Vertrek Status')
 
-        # Display the plot in Streamlit
+        # Show the plot
         st.plotly_chart(fig)
-
 
         st.write('*:blue[Conclusie uit de barplot:]*')
         st.write('Vertraging is vaker veroorzaakt op outstations, arrival delays/on time is 51.4%/48.6%. Grondafhandeling in ZRH is goed! Het aantal departure delays is namelijk erg verminderd tot een verhouding van ongeveer 20.8%/79.2%')
