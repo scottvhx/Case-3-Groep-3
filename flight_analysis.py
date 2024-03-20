@@ -2,6 +2,7 @@ import pandas as pd
 from datetime import datetime
 
 import data_cleaning
+import flight_analysis
 
 flight_schedule_df = data_cleaning.scheduleclean[['STA_STD_ltc', 'ATA_ATD_ltc', 'Org/Des']].copy()
 
