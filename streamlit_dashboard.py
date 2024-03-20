@@ -152,9 +152,36 @@ with tab5:
 
     st.write('test')
 
+    # Convert 'Delay' column to numeric format (hours)
+    scheduleclean['Delay_hours'] = pd.to_timedelta(scheduleclean['Delay']).dt.total_seconds() / 3600
+
+    # Grouping by Aircraft Type (FLT) and calculating the average Delay
+    avg_delay_per_aircraft_type = scheduleclean.groupby('ACT')['Delay_hours'].mean().reset_index()
+
+    # Renaming the columns for clarity
+    avg_delay_per_aircraft_type.columns = ['ACT', 'Average_Delay_hours']
+
+    # Create bar plot with Plotly Express
+    fig = px.bar(avg_delay_per_aircraft_type, x='ACT', y='Average_Delay_hours', 
+                 title='Average Delay per Aircraft Type',
+                 labels={'ACT': 'Aircraft Type', 'Average_Delay_hours': 'Average Delay (hours)'},
+                 template='plotly_white')  # Use 'plotly_white' template for light background
+
+    # Rotate x-axis labels for better readability
+    fig.update_xaxes(tickangle=45)
+
+    selected_option = st.selectbox('Kies een optie', 'ACT')
+     # Create the plot using Plotly Express
+            if selected_option == 'ACT':
+                fig = px.bar(avg_delay_per_aircraft_type, x='ACT', y='Average_Delay_hours', 
+                 title='Average Delay per Aircraft Type',
+                 labels={'ACT': 'Aircraft Type', 'Average_Delay_hours': 'Average Delay (hours)'},
+                 template='plotly_white')
+
+     # Show the plot
+    st.plotly_chart(fig)
 
 
-    
 
 
 
