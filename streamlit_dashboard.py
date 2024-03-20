@@ -215,7 +215,10 @@ with tab5:
     dropdown_options.extend(grouped_aircraft.groups.keys())
 
     # Create a dropdown menu widget
-    selected_option = st.sidebar.selectbox('Aircraft Category:', dropdown_options)
+     with st.sidebar:
+        st.subheader('Barplot')
+    selected_option = st.selectbox('Aircraft Category:', ['All Aircraft', 'All Small Aircraft', 'All Narrow Aircraft', 'All Wide Aircraft'])
+    
 
     def plot_delay_per_aircraft_category(category):
         if category.startswith('All'):
