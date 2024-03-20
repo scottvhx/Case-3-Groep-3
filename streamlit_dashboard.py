@@ -6,7 +6,7 @@ from streamlit_folium import folium_static
 import data_cleaning
 import flight_map
 import plotly.express as px
-import plost
+import flight_analysis
 
 
 st.set_page_config(layout='wide', initial_sidebar_state='expanded')
