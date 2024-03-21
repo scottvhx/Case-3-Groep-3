@@ -91,6 +91,8 @@ with tab2:
 
         # Toon de grafiek in Streamlit
         st.plotly_chart(fig)
+        st.write('*:blue[Conclusie uit de lijndiagram:]*')
+        st.write('Het lijndiagram toont een herstel in juli 2020, na de impact van de COVID-19-pandemie vanaf januari 2020. Echter, in de herfst- en wintermaanden is er weer een afname te zien.')
 
 
 #############################
@@ -362,12 +364,6 @@ with tab2:
         else:
             st.write("Geen gegevens beschikbaar voor deze locatie.")        
 
-        
-        
-        
-        
-       
-        
         
 ####################
 
