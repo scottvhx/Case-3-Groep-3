@@ -32,7 +32,7 @@ st.title(':blue[Vertraagde vluchten :airplane:]')
 
 # tabs die worden verwezen naar de onderstaande arguments
 
-tab1, tab2, tab3, tab4 = st.tabs([":blue[Welkom]", ":blue[Vlucht data]", ":blue[Voorspellingen]", ":red[Conclusie]"])
+tab1, tab2, tab3 = st.tabs([":blue[Welkom]", ":blue[Vlucht data]", ":blue[Voorspellingen]"])
 
 ############################
 
@@ -465,16 +465,6 @@ with tab3:
 
 
 #################
-with tab4:
-    st.write("Conclusie")
-    expander = st.expander("Filter items")
-    red = expander.checkbox("Show red items.", True)
-    blue = expander.checkbox("Show blue items.", True)
-
-    if red:
-        st.write(":red[This is a red item.]")
-    if blue:
-        st.write(":blue[This is a blue item.]")
 
 
 
