@@ -9,3 +9,4 @@ pandas==2.0.3
 pyproj==3.6.1
 altair==5.0.1
 plost==0.2.5
+sklearn-pandas==2.2.0
