@@ -126,27 +126,27 @@ with tab2:
         st.write('*:blue[Conclusie uit de barplot:]*')
         st.write('Vertraging is vaker veroorzaakt op outstations, arrival delays/on time is 51.4%/48.6%. Grondafhandeling in ZRH is goed! Het aantal departure delays is namelijk erg verminderd tot een verhouding van ongeveer 20.8%/79.2%')
 
-            # Convert 'STA_STD_ltc' and 'ATA_ATD_ltc' to datetime format
-        scheduleclean['STA_STD_ltc'] = pd.to_datetime(scheduleclean['STA_STD_ltc'])
-        scheduleclean['ATA_ATD_ltc'] = pd.to_datetime(scheduleclean['ATA_ATD_ltc'])
+         # Convert 'STA_STD_ltc' and 'ATA_ATD_ltc' to datetime format
+        data_cleaning.scheduleclean['STA_STD_ltc'] = pd.to_datetime(data_cleaning.scheduleclean['STA_STD_ltc'])
+        data_cleaning.scheduleclean['ATA_ATD_ltc'] = pd.to_datetime(data_cleaning.scheduleclean['ATA_ATD_ltc'])
 
         # Calculate the delay in seconds
-        scheduleclean['Delay_seconds'] = (scheduleclean['ATA_ATD_ltc'] - scheduleclean['STA_STD_ltc']).dt.total_seconds()
+        data_cleaning.scheduleclean['Delay_seconds'] = (data_cleaning.scheduleclean['ATA_ATD_ltc'] - data_cleaning.scheduleclean['STA_STD_ltc']).dt.total_seconds()
 
         # Convert delay to timedeltas with custom formatting
-        scheduleclean['Delay'] = pd.to_timedelta(scheduleclean['Delay_seconds'], unit='s')
+        data_cleaning.scheduleclean['Delay'] = pd.to_timedelta(data_cleaning.scheduleclean['Delay_seconds'], unit='s')
 
         # Add '+' or '-' sign manually based on delay
-        scheduleclean['Delay'] = scheduleclean['Delay'].apply(lambda x: ('+' if x >= pd.Timedelta(0) else '-') + str(abs(x)))
+        data_cleaning.scheduleclean['Delay'] = data_cleaning.scheduleclean['Delay'].apply(lambda x: ('+' if x >= pd.Timedelta(0) else '-') + str(abs(x)))
 
         # Drop the temporary column
-        scheduleclean.drop(columns=['Delay_seconds'], inplace=True)
+        data_cleaning.scheduleclean.drop(columns=['Delay_seconds'], inplace=True)
 
         # Convert 'Delay' column to numeric format (hours)
-        scheduleclean['Delay_hours'] = pd.to_timedelta(scheduleclean['Delay']).dt.total_seconds() / 3600
+        data_cleaning.scheduleclean['Delay_hours'] = pd.to_timedelta(data_cleaning.scheduleclean['Delay']).dt.total_seconds() / 3600
 
         # Grouping by Location and calculating the average Delay
-        avg_delay_per_location = scheduleclean.groupby('Org/Des')['Delay_hours'].mean().reset_index()
+        avg_delay_per_location = data_cleaning.scheduleclean.groupby('Org/Des')['Delay_hours'].mean().reset_index()
 
         # Renaming the columns for clarity
         avg_delay_per_location.columns = ['Org/Des', 'Average_Delay_hours']
@@ -154,7 +154,7 @@ with tab2:
         st.header('*Scatterplot*') 
 
         # Filter the dataset for values with 'S' in the 'LSV' column
-        departure_data = scheduleclean[scheduleclean['LSV'] == 'S']
+        departure_data = data_cleaning.scheduleclean[data_cleaning.scheduleclean['LSV'] == 'S']
 
         # Filter the dataset for values with a '+' sign in the 'Delay' column
         positive_delay_data = departure_data[departure_data['Delay'].str.startswith('+')]
