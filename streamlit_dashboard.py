@@ -63,7 +63,7 @@ with tab2:
         data_cleaning.scheduleclean['STD'] = pd.to_datetime(data_cleaning.scheduleclean['STD'], format="%d/%m/%Y")
 
         # Filter de data om alleen binnenkomende vluchten te krijgen
-        inbound_flights = data_cleaning.scheduleclean[scheduleclean['LSV'].str.contains('L', na=False)]
+        inbound_flights = data_cleaning.scheduleclean[data_cleaning.scheduleclean['LSV'].str.contains('L', na=False)]
 
         # Groepeer per maand en tel het aantal vluchten
         monthly_flights = inbound_flights.groupby(pd.Grouper(key='STD', freq='M')).size()
