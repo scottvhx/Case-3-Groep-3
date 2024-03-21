@@ -217,9 +217,9 @@ with tab2:
 
         # Filter the data based on selected aircraft types
         if selected_aircraft_types:
-        filtered_data = avg_delay_per_aircraft_type[avg_delay_per_aircraft_type['ACT'].isin(selected_aircraft_types)]
+            filtered_data = avg_delay_per_aircraft_type[avg_delay_per_aircraft_type['ACT'].isin(selected_aircraft_types)]
         else:
-        filtered_data = avg_delay_per_aircraft_type  # Show all aircraft types if nothing selected
+            filtered_data = avg_delay_per_aircraft_type  # Show all aircraft types if nothing selected
 
 
         # Update the plot with filtered data
