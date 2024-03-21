@@ -7,6 +7,7 @@ import data_cleaning
 import flight_map
 import plotly.express as px
 import flight_analysis
+import plotly.graph_objects as go  
 
 
 st.set_page_config(layout='wide', initial_sidebar_state='expanded')
@@ -53,6 +54,43 @@ with tab2:
     
         st.header("Flight Mapper")
         folium_static(flight_map.m, width=650, height=650)
+#############################
+
+        st.header('*Lijndiagram*') 
+
+        # Laad de gegevens en converteer STD kolom naar datetime met het juiste formaat
+
+        data_cleaning.scheduleclean['STD'] = pd.to_datetime(data_cleaning.scheduleclean['STD'], format="%d/%m/%Y")
+
+        # Filter de data om alleen binnenkomende vluchten te krijgen
+        inbound_flights = data_cleaning.scheduleclean[scheduleclean['LSV'].str.contains('L', na=False)]
+
+        # Groepeer per maand en tel het aantal vluchten
+        monthly_flights = inbound_flights.groupby(pd.Grouper(key='STD', freq='M')).size()
+
+        # Creëer een interactieve lijngrafiek
+        fig = go.Figure()
+
+        # Voeg een lijn trace toe voor het aantal vliegtuigen
+        fig.add_trace(go.Scatter(x=monthly_flights.index, y=monthly_flights.values, mode='lines', name='Aircraft Count'))
+
+        # Update layout om een slider te bevatten voor het wijzigen van het tijdsinterval
+        fig.update_layout(
+            title='Aantal vliegtuigen per maand',
+            xaxis=dict(
+                title='Maand',
+                type='date',
+                rangeslider=dict(
+                    visible=True
+                )
+            ),
+            yaxis=dict(
+                title='Aantal vliegtuigen'
+            )
+        )
+
+        # Toon de grafiek in Streamlit
+        st.plotly_chart(fig)
 
 
 #############################
@@ -200,7 +238,7 @@ with tab2:
         st.header('*Scatterplot*') 
 
         # Filter the dataset for values with 'S' in the 'LSV' column
-        departure_data = data_cleaning.scheduleclean[scheduleclean['LSV'] == 'L']
+        departure_data = data_cleaning.scheduleclean[data_cleaning.scheduleclean['LSV'] == 'L']
 
         # Filter the dataset for values with a '+' sign in the 'Delay' column
         positive_delay_data = departure_data[departure_data['Delay'].str.startswith('+')]
