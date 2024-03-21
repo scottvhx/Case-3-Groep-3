@@ -32,7 +32,7 @@ st.title(':blue[Vertraagde vluchten :airplane:]')
 
 # tabs die worden verwezen naar de onderstaande arguments
 
-tab1, tab2, tab3, tab4, tab5= st.tabs([":blue[Welkom]", ":blue[Vlucht data]", ":blue[Voorspellingen]", ":red[Conclusie]"])
+tab1, tab2, tab3, tab4 = st.tabs([":blue[Welkom]", ":blue[Vlucht data]", ":blue[Voorspellingen]", ":red[Conclusie]"])
 
 ############################
 
