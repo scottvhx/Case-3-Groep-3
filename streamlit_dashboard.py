@@ -7,7 +7,11 @@ import data_cleaning
 import flight_map
 import plotly.express as px
 import flight_analysis
-import plotly.graph_objects as go  
+import plotly.graph_objects as go
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_absolute_error
 
 
 st.set_page_config(layout='wide', initial_sidebar_state='expanded')
@@ -28,7 +32,7 @@ st.title(':blue[Vertraagde vluchten :airplane:]')
 
 # tabs die worden verwezen naar de onderstaande arguments
 
-tab1, tab2, tab3, tab4, tab5= st.tabs([":blue[Welkom]", ":blue[Vertraagde vluchten]", ":blue[Voorspellingen]", ":red[Conclusie]", "blue[Bar-plot]"])
+tab1, tab2, tab3, tab4, tab5= st.tabs([":blue[Welkom]", ":blue[Vlucht data]", ":blue[Voorspellingen]", ":red[Conclusie]"])
 
 ############################
 
@@ -281,13 +285,7 @@ with tab2:
         st.plotly_chart(fig)
         st.write('*:blue[Conclusie uit de plot:]*')       
         
-        
-        
-        
-        
-        
-        
-        
+
         
         st.header('*Barplot*')
          # Grouping by Aircraft Type (ACT) and calculating the average Delay
@@ -320,7 +318,7 @@ with tab2:
 
         # Show the plot using Streamlit
         st.plotly_chart(fig)
-        st.write('*:blue[Conclusie uit de plot:]*')
+        
         
         
 #######################        
@@ -372,6 +370,104 @@ with tab3:
     st.subheader("*Voorspel vertragingen op je volgende vlucht:*")
     st.write("Ben je van plan om binnenkort te vliegen? Gebruik onze voorspellingsmodule om te zien hoeveel vertraging je kunt verwachten op jouw specifieke route. Met behulp van geavanceerde modellen kunnen we je een nauwkeurige inschatting geven, zodat je goed voorbereid op reis kunt gaan!")
 
+     # Filter the dataset based on your conditions
+    filtered_data = data_cleaning.scheduleclean[(data_cleaning.scheduleclean['Delay'].str.contains('\+')) & (data_cleaning.scheduleclean['LSV'].str.contains('S'))]
+
+    # Create a new DataFrame with the filtered data
+    flightdelays = pd.DataFrame(filtered_data)
+
+    # Remove '+' and 'days' from the Delay column
+    flightdelays['Delay'] = flightdelays['Delay'].str.replace('+', '').str.replace(' days', '')
+
+    # Now 'Delay' column should only contain numerical values in the format '00:00:00'
+
+    # Create a new DataFrame with the modified data
+    flightdelays2 = pd.DataFrame(flightdelays)
+
+    # Now you have a new DataFrame containing only the modified and filtered data
+
+    # List of columns to remove
+    columns_to_remove = ['ATA_ATD_ltc', 'TAR', 'GAT', 'DL1', 'IX1', 'DL2', 'IX2', 'RWY', 'RWC', 'Identifier']
+
+    # Drop the specified columns
+    flightdelays2 = flightdelays2.drop(columns=columns_to_remove)
+
+    # Convert 'STD' column to datetime format
+    flightdelays2['STD'] = pd.to_datetime(flightdelays2['STD'], format='%d/%m/%Y')
+
+    # Convert 'STA_STD_ltc' column to datetime format
+    flightdelays2['STA_STD_ltc'] = pd.to_datetime(flightdelays2['STA_STD_ltc'], format='%H:%M:%S')
+
+    # Remove initial '0' and space from 'Delay' column
+    flightdelays2['Delay'] = flightdelays2['Delay'].str[2:]
+
+    # Check the first few rows to verify the changes
+    print(flightdelays2.head())
+
+    flightdelays3 = pd.DataFrame(flightdelays2)
+
+    # Check for NaN values in the entire DataFrame
+    nan_values = flightdelays3.isna().any()
+
+    # If you want to count the total number of NaN values in each column, you can use sum()
+    nan_count = flightdelays3.isna().sum()
+
+    # Remove rows with NaN values in the 'Org/Des' column
+    flightdelays3 = flightdelays3.dropna(subset=['Org/Des'])
+
+    # Convert 'STD' column to datetime format
+    flightdelays3['STD'] = pd.to_datetime(flightdelays3['STD'], format='%d/%m/%Y')
+
+    # Convert 'STA_STD_ltc' column to datetime format
+    flightdelays3['STA_STD_ltc'] = pd.to_datetime(flightdelays3['STA_STD_ltc'], format='%H:%M:%S')
+
+    # Convert 'Delay'
+    flightdelays3['Delay'] = pd.to_datetime(flightdelays3['Delay'], format='%H:%M:%S')
+
+    # Check the data types of each column
+    print(flightdelays3.dtypes)
+
+    
+
+
+    # Assuming flightdelays3 is your dataset
+    # Features for prediction: 'Org/Des'
+    # Target variable: 'Delay'
+    # Replace flightdelays3 with your actual dataset
+    X = flightdelays3[['Org/Des']]
+    y = flightdelays3['Delay_hours']
+
+    # Step 1: Split the Data
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    # Step 2: Feature Encoding (One-Hot Encoding for categorical feature 'Org/Des')
+    encoder = OneHotEncoder(handle_unknown='ignore')
+    X_train_encoded = encoder.fit_transform(X_train[['Org/Des']])
+    X_test_encoded = encoder.transform(X_test[['Org/Des']])
+
+    # Step 3: Model Selection and Training (using Random Forest)
+    model = RandomForestRegressor()  # Initialize Random Forest regressor
+    model.fit(X_train_encoded, y_train)
+
+    # Step 4: Model Evaluation
+    predictions = model.predict(X_test_encoded)
+    mae = mean_absolute_error(y_test, predictions)
+    print("Mean Absolute Error:", mae)
+
+    # Step 5: Prediction (for specific ICAO destination)
+    icao_code = input("Enter the ICAO code for the destination: ")
+
+    # Convert ICAO code to one-hot encoded format
+    new_data = pd.DataFrame({'Org/Des': [icao_code]})
+    new_data_encoded = encoder.transform(new_data[['Org/Des']])
+
+    # Make prediction for the specific destination
+    predicted_delay = model.predict(new_data_encoded)
+
+    # Display the predicted delay
+    print(f"Predicted delay for {icao_code}: {predicted_delay[0]}")
+
+
 
 
 #################
@@ -387,9 +483,7 @@ with tab4:
         st.write(":blue[This is a blue item.]")
 
 
-with tab5: 
 
-    st.write('test')
 
 
     
