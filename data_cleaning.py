@@ -51,3 +51,22 @@ flight36clean= flight36.drop_duplicates()
 flight37clean= flight37.drop_duplicates()
 
 print(scheduleclean.info())
+
+# Convert 'STA_STD_ltc' and 'ATA_ATD_ltc' to datetime format
+data_cleaning.scheduleclean['STA_STD_ltc'] = pd.to_datetime(data_cleaning.scheduleclean['STA_STD_ltc'])
+data_cleaning.scheduleclean['ATA_ATD_ltc'] = pd.to_datetime(data_cleaning.scheduleclean['ATA_ATD_ltc'])
+# Calculate the delay in seconds
+scheduleclean['Delay_seconds'] = (scheduleclean['ATA_ATD_ltc'] - scheduleclean['STA_STD_ltc']).dt.total_seconds()
+# Convert delay to timedeltas with custom formatting
+scheduleclean['Delay'] = pd.to_timedelta(scheduleclean['Delay_seconds'], unit='s')
+# Add '+' or '-' sign manually based on delay
+scheduleclean['Delay'] = scheduleclean['Delay'].apply(lambda x: ('+' if x >= pd.Timedelta(0) else '-') + str(abs(x)))
+# Drop the temporary column
+scheduleclean.drop(columns=['Delay_seconds'], inplace=True)
+# Convert 'Delay' column to numeric format (hours)
+scheduleclean['Delay_hours'] = pd.to_timedelta(scheduleclean['Delay']).dt.total_seconds() / 3600
+# Grouping by Aircraft Type (ACT) and calculating the average Delay
+avg_delay_per_aircraft_type = scheduleclean.groupby('ACT')['Delay_hours'].mean().reset_index()
+
+ 
+
