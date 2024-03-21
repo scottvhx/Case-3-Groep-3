@@ -195,6 +195,59 @@ with tab2:
         st.plotly_chart(fig)
         st.write('*:blue[Conclusie uit de plot:]*')
         
+##################        
+        
+        st.header('*Scatterplot*') 
+
+        # Filter the dataset for values with 'S' in the 'LSV' column
+        departure_data = data_cleaning.scheduleclean[scheduleclean['LSV'] == 'L']
+
+        # Filter the dataset for values with a '+' sign in the 'Delay' column
+        positive_delay_data = departure_data[departure_data['Delay'].str.startswith('+')]
+
+        # Extract departure time in minutes past midnight
+        departure_time_minutes = positive_delay_data['ATA_ATD_ltc'].dt.hour * 60 + positive_delay_data['STA_STD_ltc'].dt.minute
+
+        # Extract delay minutes from the 'Delay' column
+        delay_minutes = positive_delay_data['Delay'].str.extract(r'\+(\d+) days (\d+):(\d+):').astype(float)
+        delay_minutes = delay_minutes[1] * 60 + delay_minutes[2]  # Convert hours to minutes and add minutes
+
+        # Calculate mean delay
+        mean_delay = delay_minutes.mean()
+
+        # Create dataframe for Plotly scatterplot
+        scatter_data = pd.DataFrame({'Departure_Time': departure_time_minutes, 'Delay': delay_minutes})
+
+        # Create interactive scatterplot
+        fig = px.scatter(scatter_data, x='Departure_Time', y='Delay', color='Delay', labels={'Departure_Time': 'Aankomsttijd (uren)', 'Delay': 'Vertraging (minuten)'},
+                         title='Relatie tussen vertraging en aankomsttijd',
+                         hover_data={'Departure_Time': False, 'Delay': True}, trendline='ols')  
+
+        # Change color of trend line to red
+        fig.update_traces(line=dict(color='red'))
+
+        # Add mean line
+        fig.add_hline(y=mean_delay, line_dash="dash", line_color="orange", annotation_text=f"Mean Delay: {mean_delay:.2f} minuten", annotation_position="bottom right", annotation_y=0.6)
+
+        # Customize x-axis tick values and labels
+        tick_values = list(range(int(departure_time_minutes.min()), int(departure_time_minutes.max()) + 1, 120))  # Every 2 hours
+        tick_labels = [f"{h//60:02d}:{h%60:02d}" for h in tick_values]  # Format tick labels as HH:MM
+        fig.update_xaxes(tickvals=tick_values, ticktext=tick_labels)
+
+        # Update layout to make the graph bigger
+        fig.update_layout(height=600, width=800, showlegend=False)
+
+        # Display the plot in Streamlit
+        st.plotly_chart(fig)
+        st.write('*:blue[Conclusie uit de plot:]*')       
+        
+        
+        
+        
+        
+        
+        
+        
         
         st.header('*Barplot*')
          # Grouping by Aircraft Type (ACT) and calculating the average Delay
