@@ -216,7 +216,11 @@ with tab2:
         selected_aircraft_types = st.multiselect("Selecteer vliegtuigtype", avg_delay_per_aircraft_type['ACT'])
 
         # Filter the data based on selected aircraft types
+        if selected_aircraft_types:
         filtered_data = avg_delay_per_aircraft_type[avg_delay_per_aircraft_type['ACT'].isin(selected_aircraft_types)]
+        else:
+        filtered_data = avg_delay_per_aircraft_type  # Show all aircraft types if nothing selected
+
 
         # Update the plot with filtered data
         fig.update_traces(x=filtered_data['ACT'], y=filtered_data['Average_Delay_hours'])
