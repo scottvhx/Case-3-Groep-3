@@ -205,7 +205,7 @@ with tab2:
 
         # Create bar plot with Plotly Express
         fig = px.bar(avg_delay_per_aircraft_type, x='ACT', y='Average_Delay_hours', 
-                     title='"Gemiddelde Vertraging per Vliegtuigtype',
+                     title='Gemiddelde Vertraging per Vliegtuigtype',
                      labels={'ACT': 'Vliegtuigtype', 'Average_Delay_hours': 'Gemiddelde Vertraging (uren)'},
                      template='plotly_white')  # Use 'plotly_white' template for light background
 
