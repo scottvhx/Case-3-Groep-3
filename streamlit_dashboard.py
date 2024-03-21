@@ -401,8 +401,6 @@ with tab3:
     # Remove initial '0' and space from 'Delay' column
     flightdelays2['Delay'] = flightdelays2['Delay'].str[2:]
 
-    # Check the first few rows to verify the changes
-    print(flightdelays2.head())
 
     flightdelays3 = pd.DataFrame(flightdelays2)
 
@@ -423,11 +421,6 @@ with tab3:
 
     # Convert 'Delay'
     flightdelays3['Delay'] = pd.to_datetime(flightdelays3['Delay'], format='%H:%M:%S')
-
-    # Check the data types of each column
-    print(flightdelays3.dtypes)
-
-    
 
 
     # Assuming flightdelays3 is your dataset
@@ -452,7 +445,6 @@ with tab3:
     # Step 4: Model Evaluation
     predictions = model.predict(X_test_encoded)
     mae = mean_absolute_error(y_test, predictions)
-    print("Mean Absolute Error:", mae)
 
     # Step 5: Prediction (for specific ICAO destination)
     icao_code = input("Enter the ICAO code for the destination: ")
@@ -464,8 +456,10 @@ with tab3:
     # Make prediction for the specific destination
     predicted_delay = model.predict(new_data_encoded)
 
+    predicted_delay_minutes = predicted_delay * 60
+    
     # Display the predicted delay
-    print(f"Predicted delay for {icao_code}: {predicted_delay[0]}")
+    st.write(f"Predicted delay for {icao_code}: {predicted_delay_minutes[0]}")
 
 
 
