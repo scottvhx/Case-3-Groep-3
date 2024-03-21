@@ -11,7 +11,7 @@ import flight_analysis
 
 st.set_page_config(layout='wide', initial_sidebar_state='expanded')
 
-st.sidebar.header('🛬🛫 `Vertraagde Vluchten`')
+st.sidebar.title('🛬🛫 `Vertraagde Vluchten`')
 
 
     
