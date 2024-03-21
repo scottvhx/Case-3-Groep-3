@@ -12,17 +12,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error
-
-
-st.set_page_config(layout='wide', initial_sidebar_state='expanded')
-
-st.sidebar.title('🛬🛫 `Vertraagde Vluchten`')
-
-
-    
-
-
-
+import folium
 
 # Dit is het hoofd van de site
 st.title(':blue[Vertraagde vluchten :airplane:]')
@@ -35,6 +25,30 @@ st.title(':blue[Vertraagde vluchten :airplane:]')
 tab1, tab2, tab3 = st.tabs([":blue[Welkom]", ":blue[Vlucht data]", ":blue[Voorspellingen]"])
 
 ############################
+
+start_ICAO = 'LSZH'
+
+# Load flight paths from CSV
+flight_paths_df = pd.read_csv('flight_paths.csv')
+
+
+def create_empty_map():
+    folium_map = folium.Map(location=(0, 0), tiles="cartodb positron", zoom_start=1.5)
+    return folium_map
+
+# Function to create Folium map
+def create_map(data, start_ICAO, flight_paths_df):
+    folium_map = folium.Map(location=(0, 0), tiles="cartodb positron", zoom_start=1.5)
+    for _, row in data.iterrows():
+        end_ICAO = row['ICAO']
+        flight_path = eval(flight_paths_df.loc[flight_paths_df['ICAO'] == end_ICAO, 'FlightPath'].iloc[0])
+        folium.PolyLine(
+            locations=flight_path,
+            color='red',
+            weight=2
+        ).add_to(folium_map)
+
+    return folium_map   
 
 # Voeg inhoud toe aan elke tab
 with tab1:
@@ -56,8 +70,6 @@ with tab2:
         st.subheader('*Verken de wereld met onze interactieve kaart:*') 
         st.write("Duik dieper in de luchtvaartwereld met onze interactieve kaart. Volg de routes met de  hoogste vertragingen en zoom in op specifieke regio's om te zien waar de problemen het grootst zijn.")
     
-        st.header("Flight Mapper")
-        folium_static(flight_map.m, width=650, height=650)
 #############################
 
         st.header('*Lijndiagram*') 
@@ -141,10 +153,7 @@ with tab2:
         delay_color = '#069AF3'
         ontime_color = '#13EAC9'
 
-        # Sidebar
-        with st.sidebar:
-            st.subheader('Barplot')
-            selected_option = st.selectbox('Kies een optie', ['Aankomst', 'Vertrek'])
+        selected_option = st.selectbox('Kies een optie', ['Aankomst', 'Vertrek'])
 
         # Map opties naar kleuren
         color_map_arrival = {'Vertraagd bij Aankomst': delay_color, 'Aankomst op Tijd': ontime_color}
@@ -237,7 +246,6 @@ with tab2:
 
         # Display the plot in Streamlit
         st.plotly_chart(fig)
-        st.write('*:blue[Conclusie uit de plot:]*')
         
 ##################        
         
@@ -282,10 +290,7 @@ with tab2:
         fig.update_layout(height=600, width=800, showlegend=False)
 
         # Display the plot in Streamlit
-        st.plotly_chart(fig)
-        st.write('*:blue[Conclusie uit de plot:]*')       
-        
-
+        st.plotly_chart(fig)     
         
         st.header('*Barplot*')
          # Grouping by Aircraft Type (ACT) and calculating the average Delay
@@ -319,39 +324,11 @@ with tab2:
         # Show the plot using Streamlit
         st.plotly_chart(fig)
         
-        
-        
 #######################        
-        st.header('*Location*')
-
-        # Convert 'STA_STD_ltc' and 'ATA_ATD_ltc' to datetime format
-        data_cleaning.scheduleclean['STA_STD_ltc'] = pd.to_datetime(data_cleaning.scheduleclean['STA_STD_ltc'])
-        data_cleaning.scheduleclean['ATA_ATD_ltc'] = pd.to_datetime(data_cleaning.scheduleclean['ATA_ATD_ltc'])
-
-        # Calculate the delay in seconds
-        data_cleaning.scheduleclean['Delay_seconds'] = (data_cleaning.scheduleclean['ATA_ATD_ltc'] - data_cleaning.scheduleclean['STA_STD_ltc']).dt.total_seconds()
-
-        # Convert delay to timedeltas with custom formatting
-        data_cleaning.scheduleclean['Delay'] = pd.to_timedelta(data_cleaning.scheduleclean['Delay_seconds'], unit='s')
-
-        # Add '+' or '-' sign manually based on delay
-        data_cleaning.scheduleclean['Delay'] = data_cleaning.scheduleclean['Delay'].apply(lambda x: ('+' if x >= pd.Timedelta(0) else '-') + str(abs(x)))
-
-        # Drop the temporary column
-        data_cleaning.scheduleclean.drop(columns=['Delay_seconds'], inplace=True)
-
-        # Convert 'Delay' column to numeric format (hours)
-        data_cleaning.scheduleclean['Delay_hours'] = pd.to_timedelta(data_cleaning.scheduleclean['Delay']).dt.total_seconds() / 3600
-
-        # Grouping by Location and calculating the average Delay
-        avg_delay_per_location = data_cleaning.scheduleclean.groupby('Org/Des')['Delay_hours'].mean().reset_index()
-
-        # Renaming the columns for clarity
-        avg_delay_per_location.columns = ['Org/Des', 'Average_Delay_hours']
+        st.header('*Gemiddelde Vertraging*')        
 
         # Dropdown menu to select which location to display
-        st.sidebar.subheader('Location')
-        selected_location = st.sidebar.selectbox('Selecteer een locatie', avg_delay_per_location['Org/Des'].unique())
+        selected_location = st.selectbox('Selecteer een locatie', avg_delay_per_location['Org/Des'].unique())
 
         # Filter data for the selected location
         selected_data = avg_delay_per_location[avg_delay_per_location['Org/Des'] == selected_location]
@@ -370,7 +347,7 @@ with tab3:
     st.subheader("*Voorspel vertragingen op je volgende vlucht:*")
     st.write("Ben je van plan om binnenkort te vliegen? Gebruik onze voorspellingsmodule om te zien hoeveel vertraging je kunt verwachten op jouw specifieke route. Met behulp van geavanceerde modellen kunnen we je een nauwkeurige inschatting geven, zodat je goed voorbereid op reis kunt gaan!")
 
-     # Filter the dataset based on your conditions
+    # Filter the dataset based on your conditions
     filtered_data = data_cleaning.scheduleclean[(data_cleaning.scheduleclean['Delay'].str.contains('\+')) & (data_cleaning.scheduleclean['LSV'].str.contains('S'))]
 
     # Create a new DataFrame with the filtered data
@@ -447,7 +424,10 @@ with tab3:
     mae = mean_absolute_error(y_test, predictions)
 
     # Step 5: Prediction (for specific ICAO destination)
-    icao_code = input("Enter the ICAO code for the destination: ")
+    icao_code = st.selectbox("Bestemming",
+                             flightdelays3['Org/Des'],
+                             index=None,
+                             placeholder='Selecteer ICAO...')
 
     # Convert ICAO code to one-hot encoded format
     new_data = pd.DataFrame({'Org/Des': [icao_code]})
@@ -459,9 +439,13 @@ with tab3:
     predicted_delay_minutes = predicted_delay * 60
     
     # Display the predicted delay
-    st.write(f"Predicted delay for {icao_code}: {predicted_delay_minutes[0]}")
+    st.write(f"Predicted delay for {icao_code}: {round(predicted_delay_minutes[0], 2)}" + " minuten")
 
-
+    if icao_code:
+        highlighted_data = flight_paths_df[flight_paths_df['ICAO'] == icao_code]
+        highlighted_map = create_map(highlighted_data, start_ICAO, flight_paths_df)
+        st.markdown("### Map")
+        folium_static(highlighted_map)
 
 
 #################
