@@ -195,67 +195,7 @@ with tab2:
         st.plotly_chart(fig)
         st.write('*:blue[Conclusie uit de plot:]*')
 
-        st.header('*Barplot*')
-     # Assuming 'scheduleclean' is your DataFrame containing the schedule data
-
-        # Convert 'STA_STD_ltc' and 'ATA_ATD_ltc' to datetime format
-        scheduleclean['STA_STD_ltc'] = pd.to_datetime(scheduleclean['STA_STD_ltc'])
-        scheduleclean['ATA_ATD_ltc'] = pd.to_datetime(scheduleclean['ATA_ATD_ltc'])
-
-        # Calculate the delay in seconds
-        scheduleclean['Delay_seconds'] = (scheduleclean['ATA_ATD_ltc'] - scheduleclean['STA_STD_ltc']).dt.total_seconds()
-
-        # Convert delay to timedeltas with custom formatting
-        scheduleclean['Delay'] = pd.to_timedelta(scheduleclean['Delay_seconds'], unit='s')
-
-        # Add '+' or '-' sign manually based on delay
-        scheduleclean['Delay'] = scheduleclean['Delay'].apply(lambda x: ('+' if x >= pd.Timedelta(0) else '-') + str(abs(x)))
-
-        # Drop the temporary column
-        scheduleclean.drop(columns=['Delay_seconds'], inplace=True)
-
-        # Convert 'Delay' column to numeric format (hours)
-        scheduleclean['Delay_hours'] = pd.to_timedelta(scheduleclean['Delay']).dt.total_seconds() / 3600
-
-        # Grouping by Aircraft Type (ACT) and calculating the average Delay
-        avg_delay_per_aircraft_type = scheduleclean.groupby('ACT')['Delay_hours'].mean().reset_index()
-
-        # Renaming the columns for clarity
-        avg_delay_per_aircraft_type.columns = ['ACT', 'Average_Delay_hours']
-
-        # Create bar plot with Plotly Express
-        fig = px.bar(avg_delay_per_aircraft_type, x='ACT', y='Average_Delay_hours', 
-                     title='"Gemiddelde Vertraging per Vliegtuigtype',
-                     labels={'ACT': 'Vliegtuigtype', 'Average_Delay_hours': 'Gemiddelde Vertraging (uren)'},
-                     template='plotly_white')  # Use 'plotly_white' template for light background
-
-        # Rotate x-axis labels for better readability
-        fig.update_xaxes(tickangle=45)
-
-        # Display checkboxes for selecting aircraft types
-        selected_aircraft_types = st.multiselect("Selecteer vliegtuigtype", avg_delay_per_aircraft_type['ACT'])
-
-        # Filter the data based on selected aircraft types
-        filtered_data = avg_delay_per_aircraft_type[avg_delay_per_aircraft_type['ACT'].isin(selected_aircraft_types)]
-
-        # Update the plot with filtered data
-        fig.update_traces(x=filtered_data['ACT'], y=filtered_data['Average_Delay_hours'])
-
-        # Show the plot using Streamlit
-        st.plotly_chart(fig)
-        st.write('*:blue[Conclusie uit de plot:]*')
-
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+       
         
         
 ####################
