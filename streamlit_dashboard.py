@@ -321,9 +321,47 @@ with tab2:
         st.write('*:blue[Conclusie uit de plot:]*')
         
         
-        
-        
-        
+#######################        
+        st.header('*Location*')
+
+        # Convert 'STA_STD_ltc' and 'ATA_ATD_ltc' to datetime format
+        data_cleaning.scheduleclean['STA_STD_ltc'] = pd.to_datetime(data_cleaning.scheduleclean['STA_STD_ltc'])
+        data_cleaning.scheduleclean['ATA_ATD_ltc'] = pd.to_datetime(data_cleaning.scheduleclean['ATA_ATD_ltc'])
+
+        # Calculate the delay in seconds
+        data_cleaning.scheduleclean['Delay_seconds'] = (data_cleaning.scheduleclean['ATA_ATD_ltc'] - data_cleaning.scheduleclean['STA_STD_ltc']).dt.total_seconds()
+
+        # Convert delay to timedeltas with custom formatting
+        data_cleaning.scheduleclean['Delay'] = pd.to_timedelta(data_cleaning.scheduleclean['Delay_seconds'], unit='s')
+
+        # Add '+' or '-' sign manually based on delay
+        data_cleaning.scheduleclean['Delay'] = data_cleaning.scheduleclean['Delay'].apply(lambda x: ('+' if x >= pd.Timedelta(0) else '-') + str(abs(x)))
+
+        # Drop the temporary column
+        data_cleaning.scheduleclean.drop(columns=['Delay_seconds'], inplace=True)
+
+        # Convert 'Delay' column to numeric format (hours)
+        data_cleaning.scheduleclean['Delay_hours'] = pd.to_timedelta(data_cleaning.scheduleclean['Delay']).dt.total_seconds() / 3600
+
+        # Grouping by Location and calculating the average Delay
+        avg_delay_per_location = data_cleaning.scheduleclean.groupby('Org/Des')['Delay_hours'].mean().reset_index()
+
+        # Renaming the columns for clarity
+        avg_delay_per_location.columns = ['Org/Des', 'Average_Delay_hours']
+
+        # Dropdown menu to select which location to display
+        st.sidebar.subheader('Location')
+        selected_location = st.sidebar.selectbox('Selecteer een locatie', avg_delay_per_location['Org/Des'].unique())
+
+        # Filter data for the selected location
+        selected_data = avg_delay_per_location[avg_delay_per_location['Org/Des'] == selected_location]
+
+        # Display selected data
+        if not selected_data.empty:
+            st.write(f"Gemiddelde vertraging voor locatie '{selected_location}': {selected_data.iloc[0]['Average_Delay_hours']:.2f} uur")
+        else:
+            st.write("Geen gegevens beschikbaar voor deze locatie.")        
+
         
         
         
