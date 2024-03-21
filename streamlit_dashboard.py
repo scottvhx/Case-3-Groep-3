@@ -194,8 +194,9 @@ with tab2:
         # Display the plot in Streamlit
         st.plotly_chart(fig)
         st.write('*:blue[Conclusie uit de plot:]*')
-
-
+        
+        
+        st.header('*Barplot*')
          # Grouping by Aircraft Type (ACT) and calculating the average Delay
         avg_delay_per_aircraft_type =data_cleaning.scheduleclean.groupby('ACT')['Delay_hours'].mean().reset_index()
 
